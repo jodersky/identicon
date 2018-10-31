@@ -1,4 +1,4 @@
-# Identicons
+# Identicons<img align="right" src="sample.svg" height="150px" style="padding-left: 20px"/>
 
 A tiny implementation of
 [identicons](https://en.wikipedia.org/wiki/Identicon), similar to the
