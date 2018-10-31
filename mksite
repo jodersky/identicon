@@ -1,4 +1,7 @@
 #!/bin/bash
+# Build an identicon generator website, optionally publish it if
+# "publish" is given as first argument.
+
 set -o errexit
 
 ghpages=.ghpages
