@@ -4,6 +4,11 @@ A tiny implementation of
 [identicons](https://en.wikipedia.org/wiki/Identicon), similar to the
 ones used by GitHub for new avatars.
 
+If you are interested in the workings of identicons, check out this
+[excellent blog
+post](https://barro.github.io/2018/02/avatars-identicons-and-hash-visualization/)
+by Jussi Judin.
+
 ## Dependencies
 
 This library is totally self-contained, there are no 3rd party
