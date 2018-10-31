@@ -2,7 +2,7 @@
 set -o errexit
 
 ghpages=.ghpages
-git_url="git@github.com:jodersky/scala-identicon.git"
+git_url="git@github.com:jodersky/identicon.git"
 
 sbt fullOptJS
 mkdir -p "$ghpages"
