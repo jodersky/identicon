@@ -1,0 +1,23 @@
+#!/bin/bash
+set -o errexit
+
+ghpages=.ghpages
+git_url="git@github.com:jodersky/scala-identicon.git"
+
+sbt fullOptJS
+mkdir -p "$ghpages"
+cp -f index.html "$ghpages"
+cp -f js/target/scala-2.12/identicon-opt.js "$ghpages"
+
+case "$1" in
+    publish)
+	echo "Publishing website" >&2
+	git -C "$ghpages" init
+	git -C "$ghpages" add .
+	git -C "$ghpages" commit -m "Publish website" || true
+	git -C "$ghpages" push -f "$git_url" master:gh-pages
+	;;
+    *)
+	echo "Skipping publish step" >&2
+	;;
+esac
