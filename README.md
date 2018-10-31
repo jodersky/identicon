@@ -15,8 +15,11 @@ This library is totally self-contained, there are no 3rd party
 dependencies. It is built and published for Scala on JVM, JS and
 Native.
 
+[![Download](https://img.shields.io/maven-central/v/io.crashbox/identicon_2.12.svg)](http://search.maven.org/#search|ga|1|io.crashbox%20identicon-)
+
+
 ```sbt
-"io.crashbox" %%% "identicon" % "<unreleased>"
+"io.crashbox" %%% "identicon" % "0.1.0"
 ```
 
 ## Usage
