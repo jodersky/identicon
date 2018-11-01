@@ -5,19 +5,20 @@ import java.util.Base64
 
 trait Identicon {
 
-  private def lrot(x: Int, c: Int) = (x << c) | (x >>> (32 - c))
+  private def lrot(x: Int, c: Int): Int = (x << c) | (x >>> (32 - c))
 
   // NB: this implementation has a bug and does NOT correspond to the actual MD5
   // specification. It does however produce a hash that appears to be good
   // enough for generating identicons.
-  private def md5(in: IndexedSeq[Byte]): Array[Byte] = {
-    var s = Array[Int](
+  private def md5(message: Array[Byte]): Array[Byte] = {
+    val s = Array[Int](
       7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20,
       5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16, 23, 4,
       11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6,
       10, 15, 21
     )
-    var K = Array[Int](
+
+    val k = Array[Int](
       0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
       0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
       0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821, 0xf61e2562, 0xc040b340,
@@ -36,76 +37,83 @@ trait Identicon {
     var c0 = 0x98badcfe
     var d0 = 0x10325476
 
-    // 1 = extra "0b1000000" byte
-    val zeroBytes = Math.floorMod(61 - (in.size + 1), 64)
-    val data = new Array[Byte](in.size + 1 + zeroBytes + 4) // 4 = length
-    for ((byte, i) <- in.zipWithIndex) {
-      data(i) = byte
-    }
-    data(in.size) = (1 << 7).toByte
-    data(in.size + 1 + zeroBytes) = ((in.size >>> 24) & 0xff).toByte
-    data(in.size + 1 + zeroBytes + 1) = ((in.size >>> 16) & 0xff).toByte
-    data(in.size + 1 + zeroBytes + 2) = ((in.size >>> 8) & 0xff).toByte
-    data(in.size + 1 + zeroBytes + 3) = ((in.size) & 0xff).toByte
+    // number of 64-byte (512-bit) blocks that will be processed
+    val nblocks = ((message.size + 8) >>> 6) + 1
+    val bytes = new Array[Byte](nblocks << 6)
 
-    for (chunk <- 0 until data.size / 64) {
-      val M = for (i <- 0 until 16) yield {
-        (data(chunk * 64 + i * 4) << 24) |
-          (data(chunk * 64 + i * 4 + 1) << 16) |
-          (data(chunk * 64 + i * 4 + 2) << 8) |
-          data(chunk * 64 + i * 4 + 3)
+    Array.copy(message, 0, bytes, 0, message.size)
+    bytes(message.size) = 0x80.toByte
+
+    val bitLength: Long = message.size.toLong << 3
+    bytes(bytes.size - 8) = (bitLength).toByte
+    bytes(bytes.size - 7) = (bitLength >>> 8).toByte
+    bytes(bytes.size - 6) = (bitLength >>> 16).toByte
+    bytes(bytes.size - 5) = (bitLength >>> 24).toByte
+    // bytes(bytes.size - 4) = (bitLength >>> 32).toByte
+    // bytes(bytes.size - 3) = (bitLength >>> 40).toByte
+    // bytes(bytes.size - 2) = (bitLength >>> 48).toByte
+    // bytes(bytes.size - 1) = (bitLength >>> 56).toByte
+
+    for (block <- 0 until nblocks) {
+      val m = new Array[Int](16)
+      var index = block << 6
+      for (i <- 0 until 16) {
+        m(i) = bytes(index) |
+          (bytes(index + 1) << 8) |
+          (bytes(index + 2) << 16) |
+          (bytes(index + 3) << 24)
+        index += 4
       }
 
-      var A = a0
-      var B = b0
-      var C = c0
-      var D = d0
+      var a = a0
+      var b = b0
+      var c = c0
+      var d = d0
 
       for (i <- 0 until 64) {
-        var F = 0
+        var f = 0
         var g = 0
-        if (0 <= i && i <= 15) {
-          F = (B & C) | ((~B) & D)
+        if (i < 16) {
+          f = (b & c) | ((~b) & d)
           g = i
-        } else if (16 <= i && i <= 31) {
-          F = (D & B) | ((~D) & C)
-          g = (5 * i + 1) % 16
-        } else if (32 <= i && i <= 47) {
-          F = B ^ C ^ D
-          g = (3 * i + 5) % 16
-        } else if (48 <= i && i <= 63) {
-          F = C ^ (B | (~D))
-          g = (7 * i) % 16
+        } else if (i < 32) {
+          f = (d & b) | ((~d) & c)
+          g = (5 * i + 1) & 0x0f
+        } else if (i < 48) {
+          f = b ^ c ^ d
+          g = (3 * i + 5) & 0x0f
+        } else {
+          f = c ^ (b | (~d))
+          g = (7 * i) & 0x0f
         }
-        F = F + A + K(i) + M(g)
-        A = D
-        D = C
-        C = B
-        B = B + lrot(F, s(i))
+        f = f + a + k(i) + m(g)
+        a = d
+        d = c
+        c = b
+        b = b + lrot(f, s(i))
       }
-      a0 = a0 + A
-      b0 = b0 + B
-      c0 = c0 + C
-      d0 = d0 + D
+      a0 += a
+      b0 += b
+      c0 += c
+      d0 += d
     }
-
     val digest = new Array[Byte](16)
-    digest(0) = ((a0 >>> 24) & 0xff).toByte
-    digest(1) = ((a0 >>> 16) & 0xff).toByte
-    digest(2) = ((a0 >>> 8) & 0xff).toByte
-    digest(3) = ((a0 & 0xff)).toByte
-    digest(4) = ((b0 >>> 24) & 0xff).toByte
-    digest(5) = ((b0 >>> 16) & 0xff).toByte
-    digest(6) = ((b0 >>> 8) & 0xff).toByte
-    digest(7) = ((b0 & 0xff)).toByte
-    digest(8) = ((c0 >>> 24) & 0xff).toByte
-    digest(9) = ((c0 >>> 16) & 0xff).toByte
-    digest(10) = ((c0 >>> 8) & 0xff).toByte
-    digest(11) = ((c0 & 0xff)).toByte
-    digest(12) = ((d0 >>> 24) & 0xff).toByte
-    digest(13) = ((d0 >>> 16) & 0xff).toByte
-    digest(14) = ((d0 >>> 8) & 0xff).toByte
-    digest(15) = ((d0 & 0xff)).toByte
+    digest(0) = a0.toByte
+    digest(1) = (a0 >>> 8).toByte
+    digest(2) = (a0 >>> 16).toByte
+    digest(3) = (a0 >>> 24).toByte
+    digest(4) = b0.toByte
+    digest(5) = (b0 >>> 8).toByte
+    digest(6) = (b0 >>> 16).toByte
+    digest(7) = (b0 >>> 24).toByte
+    digest(8) = c0.toByte
+    digest(9) = (c0 >>> 8).toByte
+    digest(10) = (c0 >>> 16).toByte
+    digest(11) = (c0 >>> 24).toByte
+    digest(12) = d0.toByte
+    digest(13) = (d0 >>> 8).toByte
+    digest(14) = (d0 >>> 16).toByte
+    digest(15) = (d0 >>> 24).toByte
     digest
   }
 
@@ -141,9 +149,5 @@ trait Identicon {
     val b64 = Base64.getEncoder().encodeToString(svg(name).getBytes("UTF-8"))
     s"data:image/svg+xml;base64,$b64"
   }
-
-  // def url(name: String): String = {
-  //   s"data:image/svg+xml;utf8,${svg(name)}"
-  // }
 
 }
