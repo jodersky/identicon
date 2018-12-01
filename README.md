@@ -33,6 +33,6 @@ identicon.url("admin") // = data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0...
 
 ```
 
-See the [online generator](https://jakob.odersky.com/identicon) for an
+See the [online generator](https://jodersky.github.io/identicon) for an
 interactive preview. The generator is simply a static site that uses
 the ScalaJS version of this library.
