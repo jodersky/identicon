@@ -17,10 +17,17 @@ Native.
 
 [![Download](https://img.shields.io/maven-central/v/io.crashbox/identicon_2.13.svg)](http://search.maven.org/#search|ga|1|io.crashbox%20identicon-)
 
+- mill:
 
-```sbt
-"io.crashbox" %%% "identicon" % "0.1.0"
-```
+  ```scala
+  ivy"io.crashbox::identicon::0.3.0"
+  ```
+
+- sbt:
+
+  ```sbt
+  "io.crashbox" %%% "identicon" % "0.3.0"
+  ```
 
 ## Usage
 
