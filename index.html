@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+    <head>
+	<meta charset="UTF-8">
+	<style>
+	 * {
+	     box-sizing: border-box;
+	 }
+	 html, body {
+	     font-family: sans-serif;
+	     width: 100%;
+	     height: 100%;
+	     display: flex;
+	     flex-direction: column;
+	     align-items: center;
+	     justify-content: center;
+	 }
+	 div {
+	     border: 1px solid #f1f1f1;
+	     border-radius: .25em;
+	     padding: 1em;
+	     margin: 1em;
+	     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	     width: 300px;
+	 }
+	 input[type=text] {
+	     display: block;
+	     margin-top: 1em;
+	     margin-bottom: 1em;
+	     border: 1px solid #f1f1f1;
+	     border-radius: 2px;
+	     padding: 0.5em;
+	     width: 100%;
+	 }
+	 button {
+	     border-radius: 2px;
+	     background-color: #0daa1a;
+	     color: #ffffff;
+	     padding: 1em;
+	     border: none;
+	     cursor: pointer;
+	     width: 100%;
+	 }
+	 button:hover {
+	     opacity: 0.8;
+	 }
+
+	 img {
+	     width: 100%;
+	 }
+	</style>
+    </head>
+    <body>
+	<div>
+	    <form action="javascript:void(0);" onsubmit="generate()">
+		<input type="text" id="name" name="name" placeholder="Username" oninput="generate()" autofocus />
+		<button type="submit">Generate Identicon</button>
+	    </form>
+	</div>
+	<div>
+	    <img id="image" alt="identicon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPjxyZWN0IHg9IjAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHN0eWxlPSJmaWxsOiMwYTQyNTY7c3Ryb2tlOiMwYTQyNTY7c3Ryb2tlLXdpZHRoOjAuMDUiLz48cmVjdCB4PSI0IiB5PSIxIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBzdHlsZT0iZmlsbDojMGE0MjU2O3N0cm9rZTojMGE0MjU2O3N0cm9rZS13aWR0aDowLjA1Ii8+PHJlY3QgeD0iMCIgeT0iMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgc3R5bGU9ImZpbGw6IzBhNDI1NjtzdHJva2U6IzBhNDI1NjtzdHJva2Utd2lkdGg6MC4wNSIvPjxyZWN0IHg9IjQiIHk9IjMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHN0eWxlPSJmaWxsOiMwYTQyNTY7c3Ryb2tlOiMwYTQyNTY7c3Ryb2tlLXdpZHRoOjAuMDUiLz48cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBzdHlsZT0iZmlsbDojMGE0MjU2O3N0cm9rZTojMGE0MjU2O3N0cm9rZS13aWR0aDowLjA1Ii8+PHJlY3QgeD0iMyIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgc3R5bGU9ImZpbGw6IzBhNDI1NjtzdHJva2U6IzBhNDI1NjtzdHJva2Utd2lkdGg6MC4wNSIvPjxyZWN0IHg9IjIiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHN0eWxlPSJmaWxsOiMwYTQyNTY7c3Ryb2tlOiMwYTQyNTY7c3Ryb2tlLXdpZHRoOjAuMDUiLz48cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBzdHlsZT0iZmlsbDojMGE0MjU2O3N0cm9rZTojMGE0MjU2O3N0cm9rZS13aWR0aDowLjA1Ii8+PHJlY3QgeD0iMiIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgc3R5bGU9ImZpbGw6IzBhNDI1NjtzdHJva2U6IzBhNDI1NjtzdHJva2Utd2lkdGg6MC4wNSIvPjwvc3ZnPg==">
+	</div>
+	<script type="text/javascript" src="identicon.js"></script>
+	<script type="text/javascript">
+	 function generate() {
+	     var input = document.getElementById("name").value
+	     var svg = identicon.url(input)
+	     document.getElementById("image").src = svg
+	 }
+	</script>
+
+    </body>
+</html>
