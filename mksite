@@ -7,10 +7,10 @@ set -o errexit
 ghpages=.ghpages
 git_url="git@github.com:jodersky/identicon.git"
 
-./mill -i identicon.js[2.13.4,1.0.0].fullOpt
+./mill -i identicon.js[2.13.5,1.5.0].fullOpt
 mkdir -p "$ghpages"
 cp -f index.html "$ghpages/index.html"
-cp -f out/identicon/js/2.13.4/1.0.0/fullOpt/dest/out.js "$ghpages/identicon.js"
+cp -f out/identicon/js/2.13.5/1.5.0/fullOpt/dest/out.js "$ghpages/identicon.js"
 
 case "$1" in
     publish)

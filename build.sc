@@ -32,7 +32,7 @@ object identicon extends Module {
     }
     def artifactName = "identicon"
   }
-  object jvm extends Cross[JvmModule]("2.13.4", "3.0.0-M2")
+  object jvm extends Cross[JvmModule]("2.13.5", "3.0.0")
 
   class JsModule(val crossScalaVersion: String, val crossScalaJsVersion: String)
       extends CrossScalaModule
@@ -46,7 +46,7 @@ object identicon extends Module {
     }
     def artifactName = "identicon"
   }
-  object js extends Cross[JsModule](("2.13.4", "1.0.0"))
+  object js extends Cross[JsModule](("2.13.5", "1.5.0"))
 
   class NativeModule(val crossScalaVersion: String, val crossScalaNativeVersion: String)
       extends CrossScalaModule
@@ -60,6 +60,6 @@ object identicon extends Module {
     }
     def artifactName = "identicon"
   }
-  object native extends Cross[NativeModule](("2.11.12", "0.4.0-M2"))
+  object native extends Cross[NativeModule](("2.13.5", "0.4.0"))
 
 }
