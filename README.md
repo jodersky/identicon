@@ -20,13 +20,13 @@ Native.
 - mill:
 
   ```scala
-  ivy"io.crashbox::identicon::0.3.0"
+  ivy"io.crashbox::identicon::0.4.0"
   ```
 
 - sbt:
 
   ```sbt
-  "io.crashbox" %%% "identicon" % "0.3.0"
+  "io.crashbox" %%% "identicon" % "0.4.0"
   ```
 
 ## Usage
